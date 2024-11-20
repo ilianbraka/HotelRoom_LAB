@@ -1,0 +1,32 @@
+name: Build and Deploy Docker Image
+
+on:
+  workflow_run:
+    workflows:
+      - node.js   # Remplacez cela par le nom exact de votre premier workflow
+    types:
+      - completed
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Étape 1 : Récupérer le code
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Étape 2 : Se connecter à DockerHub
+      - name: Log in to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: "ilianbraka"
+          password: "Qwerty95."
+
+      # Étape 3 : Construire l'image Docker
+      - name: Build Docker Image
+        run: docker build -t ilianbraka/api-testing-js-app:latest .
+
+      # Étape 4 : Publier l'image Docker sur DockerHub
+      - name: Push Docker Image
+        run: docker push ilianbraka/api-testing-js-app:latest
